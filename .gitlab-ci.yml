@@ -1,0 +1,39 @@
+stages:
+  - deploy_test
+  - deploy_verify
+  - deploy_release
+
+
+test:
+  stage: deploy_test
+  only: 
+    - test
+  tags:
+    - dev_1
+  script:
+    - whoami
+    - chmod +x start.sh
+    - ./start.sh
+
+verify:
+  stage: deploy_verify
+  only: 
+    - verify
+  tags:
+    - sim-python
+  script:
+    - chmod +x start.sh
+    - ./start.sh
+
+release:
+  stage: deploy_release
+  only:
+    - release
+  tags:
+    - python-release
+  environment:
+    name: release
+    url: https://mobile-application.zyz.com/user/loginByMobile.json?params=%7B%22mobile%22:%2218510574788%22,%22verifyCode%22:%229966%22,%22appKey%22:%22login%22,%22channel%22:%22%22,%22code%22:%22%22%7D
+  script:
+    - cd /home/zyz/zyz-deploy-online/
+    - python python_project.py mobile-app
